@@ -1,6 +1,7 @@
 //* Imports básicos necessários 
 import * as THREE from  'three';
 import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
+import {ColladaLoader} from '../build/jsm/loaders/ColladaLoader.js';
 import {initRenderer, 
         initDefaultBasicLight,
         onWindowResize, 
@@ -32,22 +33,95 @@ window.addEventListener( 'resize', function(){onWindowResize(camera, renderer)},
 //window.addEventListener('joyStickMove', onJoyStickMove);
 
 //* Iluminação
-let position = new THREE.Vector2(-15, 15);
+let position = new THREE.Vector3(-20, 25, -30);
 let lightColor = "rgb(255, 255, 255)";
 
 const dirLight = new THREE.DirectionalLight(lightColor, 0.8);
-    dirLight.position.copy(position);
-    dirLight.castShadow = true;
+    setDirectionalLighting(position);
 scene.add(dirLight);
 
-light.shadow.mapSize.width = 2048; // default
-light.shadow.mapSize.height = 2048; // default
-light.shadow.camera.near = -40; // default
-light.shadow.camera.far = 400; // default
-light.shadow.camera.left = 90; // default
-light.shadow.camera.right = -90; // default
-light.shadow.camera.bottom = -90; // default
-light.shadow.camera.top = 90; // default
+// audios
+
+let mixer, audioPath, r2d2, time = 0;
+
+var audioLoader = new THREE.AudioLoader();
+audioLoader.load( './assets/gunshot-sound-effect.mp3', function( buffer ) {
+	PlaneShotSound.setBuffer( buffer );
+	PlaneShotSound.setLoop( false );
+	PlaneShotSound.setVolume( 0.5 );
+});
+
+// Create the loading manager
+const loadingManager = new THREE.LoadingManager( () => {
+  let loadingScreen = document.getElementById( 'loading-screen' );
+  loadingScreen.transition = 0;
+  loadingScreen.style.setProperty('--speed1', '0');  
+  loadingScreen.style.setProperty('--speed2', '0');  
+  loadingScreen.style.setProperty('--speed3', '0');      
+
+  let button  = document.getElementById("myBtn")
+  button.style.backgroundColor = 'Red';
+  button.innerHTML = 'Jogar';
+  button.addEventListener("click", onButtonPressed);
+});
+
+// Loading objects and audio
+loadAudio(loadingManager, './assets/ambientSound.mp3');
+loadColladaObject(loadingManager, ' ../assets/objects/stormtrooper/stormtrooper.dae');
+
+var audioLoader = new THREE.AudioLoader();
+let ambientSoundIsPlaying = true;
+
+//-- Functions --------------------------------------------------------
+function onButtonPressed() {
+    const loadingScreen = document.getElementById( 'loading-screen' );
+    loadingScreen.transition = 0;
+    loadingScreen.classList.add( 'fade-out' );
+    loadingScreen.addEventListener( 'transitionend', (e) => {
+        const element = e.target;
+        element.remove();  
+    });  
+    // Config and play the loaded audio
+    let ambientSound = new THREE.Audio( new THREE.AudioListener() );
+    audioLoader.load( audioPath, function( buffer ) {
+        ambientSound.setBuffer( buffer );
+        ambientSound.setLoop( true );
+        ambientSound.setVolume( 0.2 );
+        ambientSound.play(); 
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.code === 'KeyS' && ambientSoundIsPlaying) {
+            ambientSound.pause();
+            ambientSoundIsPlaying = false;
+        } else if(event.code === 'KeyS' && !ambientSoundIsPlaying){
+            ambientSound.play();
+            ambientSoundIsPlaying = true;
+        }
+    });
+
+    document.body.style.cursor = 'none';
+}
+
+function loadColladaObject(manager, object)
+{
+    const loader = new ColladaLoader( manager );
+    loader.load( object, ( collada ) => {
+        const avatar = collada.scene;
+        const animations = avatar.animations;
+        mixer = new THREE.AnimationMixer( avatar );
+        mixer.clipAction( animations[ 0 ] ).play();
+    } );
+}
+
+function loadAudio(manager, audio)
+{
+    // Create ambient sound
+    audioLoader = new THREE.AudioLoader(manager);
+    audioPath = audio;
+}
+
+
 
 //* Skybox
 
@@ -412,7 +486,23 @@ function movimentacaoCamera(){
 
 }
 
+function setDirectionalLighting(position) {
+  dirLight.position.copy(position);
 
+  // Shadow settings
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.width = 1024;
+  dirLight.shadow.mapSize.height = 1024;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 190;
+  dirLight.shadow.camera.left = -300;
+  dirLight.shadow.camera.right = 300;
+  dirLight.shadow.camera.top = 100;
+  dirLight.shadow.camera.bottom = -100;
+  dirLight.name = "Direction Light";
+
+  scene.add(dirLight);
+}
 //* Função render 
 
 function render()
