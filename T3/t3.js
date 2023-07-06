@@ -21,8 +21,8 @@ renderer = initRenderer();
    renderer.setClearColor("rgb(30, 30, 42)");
 
 camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 30000);
-  camera.position.set(0,13,-60);
-  camera.lookAt(camera.position.x, camera.position.y, 50 );
+  camera.position.set(0,11,-60);
+  camera.lookAt(camera.position.x, 10, 30 );
 
 light = initDefaultBasicLight(scene, true); 
 
@@ -103,6 +103,7 @@ for(let i = 0; i<20; i++){
     planos.enqueue(plane);
 }
 
+
 //* Importação do objeto avião e da torreta
 
 var aviao = null;
@@ -124,12 +125,10 @@ function loadGLBFile(modelPath, modelName, visibility, desiredScale)
       var normalizedObj = normalizeAndRescale(obj, desiredScale);
      
       var fixedObj = fixPosition(normalizedObj);
-  
-      if(modelName == 'xwing'){
 
-        aviao = fixedObj;
-        verificarObjetoCarregado(aviao);    
-      }   
+      aviao = fixedObj;
+      verificarObjetoCarregado(aviao);     
+
     });
 }
 
@@ -153,18 +152,29 @@ function fixPosition(obj)
       obj.translateY(-box.min.y);
     else
      obj.translateY(-1*box.min.y);
-     
-     if(obj.name == 'xwing')
-        obj.rotateY(THREE.MathUtils.degToRad(-180));
-
-        
+    
      return obj;
   
 }
 
 function verificarObjetoCarregado(objeto) {
     if (objeto !== null && objeto !== undefined) {
+
           scene.add(objeto);
+
+          var box = new THREE.Box3().setFromObject(objeto);
+
+          var boxMin = box.min;
+          var boxMax = box.max;
+
+          var boxSize = boxMax.clone().sub(boxMin);
+          var boxGeometry = new THREE.BoxGeometry(boxSize.x/2, boxSize.y/2, boxSize.z/2);
+
+          var boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+          var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+
+          objeto.add(boxMesh);
+          
           render();
     } 
 }
@@ -313,19 +323,51 @@ document.addEventListener('mouseup', (event) => {
 //* Colisões 
 
 const bulletGeometry = new THREE.SphereGeometry(0.2, 8, 8);
-const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0x00FFFF });
+const bulletMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFFFF });
 let bullets = [];
+
 
 //* Criando a função que realiza o tiro do avião
 
 function shootBullet() {
-  if (bullets.length < 20) { // Verifica se o número máximo de balas foi atingido
+  if (bullets.length < 20) { 
     const bullet = new THREE.Mesh(bulletGeometry, bulletMaterial);
+    let bbBullet = new THREE.Box3().setFromObject(bullet);
+    let bbHelper1 = createBBHelper(bbBullet, 'green', bullet);
+    bbHelper1.visible = true;
     bullet.position.copy(aviao.position);
     scene.add(bullet);
     bullets.push(bullet);
+
+    const velocidadeBala = 0.008;
+
+    const direcaoBala = new THREE.Vector3();
+    direcaoBala.subVectors(target.position, aviao.position);
+
+    function updateBulletPosition() {
+
+      for (let i = 0; i < bullets.length; i++) {
+        
+        const bullet = bullets[i];
+        bullet.position.addScaledVector(direcaoBala, velocidadeBala);
+
+      }
+    }
+
+    requestAnimationFrame(updateBulletPosition);
+
   }
 }
+
+function createBBHelper(bb, color, obj)
+{
+   // Create a bounding box helper
+   let helper = new THREE.Box3Helper( bb, color );
+   obj.add( helper );
+   return helper;
+}
+
+
 
 //* Mudança da posição da câmera 
 
@@ -386,7 +428,7 @@ function render()
 
     }
 
-   speed = 0.5;
+   speed = 0.8;
 
    movimentacaoCamera();
 
@@ -411,8 +453,8 @@ function render()
       }
     
       for(let i =0; i<20; i++){
-        if(planos.get(i).position.z > 150){
-          planos.get(i).material.opacity=0 ;
+        if(planos.get(i).position.z > 120){
+          planos.get(i).material.opacity = 0;
         }else{
           planos.get(i).material.opacity += speed/40;
         }

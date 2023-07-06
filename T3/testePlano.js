@@ -1,122 +1,10 @@
 import * as THREE from  'three';
 import { OrbitControls } from '../build/jsm/controls/OrbitControls.js';
-import {GLTFLoader} from '../build/jsm/loaders/GLTFLoader.js';
 import {initRenderer, 
-    initDefaultBasicLight,
-    getMaxSize} from "../libs/util/util.js";
+    initDefaultBasicLight} from "../libs/util/util.js";
 
 
 let scene, camera, light;
-
-var torreta = null;
-//var torreta2 = null;
-
-loadGLBFile1('./assets/torreta/', 'turret', true, 13.0);
-//loadGLBFile2('./assets/torreta/', 'turret', true, 13.0);
-
-function loadGLBFile1(modelPath, modelName, visibility, desiredScale)
-{
-   var loader = new GLTFLoader( );
-   loader.load( modelPath + modelName + '.gltf', function ( gltf ) {
-      var obj = gltf.scene;
-      obj.name = modelName;
-      obj.visible = visibility;
-      obj.castShadow = true;                          
-      obj.traverse( function ( child ) {
-         if ( child ) {
-            child.castShadow = true;
-         }
-      });
-      obj.traverse( function( node )
-      {
-         if( node.material ) node.material.side = THREE.DoubleSide;
-      });
-
-      var normalizedObj = normalizeAndRescale(obj, desiredScale);
-     
-      var fixedObj = fixPosition1(normalizedObj);
-
-      torreta = fixedObj;
-
-      verificarObjetoCarregado(torreta, 0);
-
- 
-    });
-}
-
-// function loadGLBFile2(modelPath, modelName, visibility, desiredScale)
-// {
-//    var loader = new GLTFLoader( );
-//    loader.load( modelPath + modelName + '.gltf', function ( gltf ) {
-//       var obj = gltf.scene;
-//       obj.name = modelName;
-//       obj.visible = visibility;
-//       obj.castShadow = true;                          
-//       obj.traverse( function ( child ) {
-//          if ( child ) {
-//             child.castShadow = true;
-//          }
-//       });
-//       obj.traverse( function( node )
-//       {
-//          if( node.material ) node.material.side = THREE.DoubleSide;
-//       });
-
-//       var normalizedObj = normalizeAndRescale(obj, desiredScale);
-     
-//       var fixedObj = fixPosition2(normalizedObj);
-
-//       torreta2 = fixedObj;
-
-//       verificarObjetoCarregado(torreta2, 1);
-
- 
-//     });
-// }
-
-function normalizeAndRescale(obj, newScale)
-  {
-      var scale = getMaxSize(obj); 
-      obj.scale.set(newScale * (0.5/scale),
-                    newScale * (0.5/scale),
-                    newScale * (0.5/scale));
-                  
-    return obj;
-} 
-
-function fixPosition1(obj)
-  {
-
-    obj.translateX(0)
-    obj.translateY(8);
-    obj.translateZ(-2);
-    obj.rotateY(THREE.MathUtils.degToRad(90));  
-  
-     return obj;
-  
-}
-
-// function fixPosition2(obj)
-//   {
-
-//     obj.translateX(18)
-//     obj.translateY(8);
-//     obj.translateZ(7);
-//     obj.rotateY(THREE.MathUtils.degToRad(90));  
-  
-//     return obj;
-  
-// }
-
-function verificarObjetoCarregado(objeto, cont) {
-    if (objeto !== null && objeto !== undefined) {
-        cube.add(objeto);
-        if(cont == 1){
-            render();
-        }
-
-    }
-}
 
 scene = new THREE.Scene(); 
 
@@ -139,6 +27,8 @@ let material;
 // Material e Geometria do cubo 
 material = new THREE.MeshLambertMaterial();
 let cubeGeometry = new THREE.BoxGeometry( 10, 10, 10 );
+let cubeGeometry3 = new THREE.BoxGeometry(window.innerWidth/8, 10, 10);
+
 
 // Criação dos cubos 
 let cube = new THREE.Mesh(cubeGeometry, material);
@@ -162,6 +52,49 @@ cube9.castShadow = true;
 let cube10 = new THREE.Mesh(cubeGeometry, material);
 cube10.castShadow = true;
 
+let cube11 = new THREE.Mesh(cubeGeometry, material);
+cube11.castShadow = true;
+let cube12 = new THREE.Mesh(cubeGeometry, material);
+cube12.castShadow = true;
+let cube13 = new THREE.Mesh(cubeGeometry, material);
+cube13.castShadow = true;
+let cube14 = new THREE.Mesh(cubeGeometry, material);
+cube14.castShadow = true;
+let cube15 = new THREE.Mesh(cubeGeometry, material);
+cube15.castShadow = true;
+let cube16 = new THREE.Mesh(cubeGeometry, material);
+cube16.castShadow = true;
+let cube17 = new THREE.Mesh(cubeGeometry, material);
+cube17.castShadow = true;
+let cube18 = new THREE.Mesh(cubeGeometry, material);
+cube18.castShadow = true;
+
+let cube19 = new THREE.Mesh(cubeGeometry, material);
+cube19.castShadow = true;
+let cube20 = new THREE.Mesh(cubeGeometry, material);
+cube20.castShadow = true;
+let cube21 = new THREE.Mesh(cubeGeometry, material);
+cube21.castShadow = true;
+let cube22 = new THREE.Mesh(cubeGeometry, material);
+cube22.castShadow = true;
+let cube23 = new THREE.Mesh(cubeGeometry, material);
+cube23.castShadow = true;
+let cube24 = new THREE.Mesh(cubeGeometry, material);
+cube24.castShadow = true;
+let cube25 = new THREE.Mesh(cubeGeometry, material);
+cube25.castShadow = true;
+let cube26 = new THREE.Mesh(cubeGeometry, material);
+cube26.castShadow = true;
+
+let cube27 = new THREE.Mesh(cubeGeometry3, material);
+cube27.castShadow = true;
+let cube28 = new THREE.Mesh(cubeGeometry3, material);
+cube28.castShadow = true;
+let cube29 = new THREE.Mesh(cubeGeometry3, material);
+cube29.castShadow = true;
+let cube30 = new THREE.Mesh(cubeGeometry3, material);
+cube30.castShadow = true;
+
 // Textura dos cubos 
 var textureLoader = new THREE.TextureLoader();
 var texture = textureLoader.load('./assets/CubeTexture.png');
@@ -179,6 +112,28 @@ cube8.position.set(20, 0, 10);
 cube9.position.set(30, 10, 10);
 cube10.position.set(0, 0, 10);
 
+cube11.position.set(-20,10,10);
+cube12.position.set(-20, 10, 0);
+cube13.position.set(-30 , 10 , 10);
+cube15.position.set(-30, 10, 0);
+cube14.position.set(40, 10, 0);
+cube16.position.set(40, 10, 10);
+cube17.position.set(50, 10, 10);
+cube18.position.set(50, 10, 0);
+
+cube19.position.set(-40, 10, 10);
+cube20.position.set(-40, 10, 0);
+cube21.position.set(-50, 10, 10);
+cube22.position.set(-50, 10, 0);
+cube23.position.set(60,10,0);
+cube24.position.set(60,10,10);
+cube25.position.set(70,10,10);
+cube26.position.set(70,10,0);
+
+cube27.position.set(160, 10, 10);
+cube28.position.set(160, 10, 0);
+cube29.position.set(-140, 10, 10);
+cube30.position.set(-140, 10, 0);
 
 cube.material.transparent = true;
 
@@ -191,6 +146,29 @@ cube.add(cube7);
 cube.add(cube8);
 cube.add(cube9);
 cube.add(cube10);
+
+cube.add(cube11);
+cube.add(cube12);
+cube.add(cube13);
+cube.add(cube14);
+cube.add(cube15);
+cube.add(cube16);
+cube.add(cube17);
+cube.add(cube18);
+
+cube.add(cube19);
+cube.add(cube20);
+cube.add(cube21);
+cube.add(cube22);
+cube.add(cube23);
+cube.add(cube24);
+cube.add(cube25);
+cube.add(cube26);
+
+cube.add(cube27);
+cube.add(cube28);
+cube.add(cube29);
+cube.add(cube30);
 
 scene.add(cube);
 
@@ -217,6 +195,24 @@ newCube7.castShadow = true;
 let newCube8 = new THREE.Mesh(newCubeGeometry1, material);
 newCube8.castShadow = true;
 
+let newCube9 = new THREE.Mesh(newCubeGeometry1, material);
+newCube9.castShadow = true;
+let newCube10 = new THREE.Mesh(newCubeGeometry1, material);
+newCube10.castShadow = true;
+let newCube11 = new THREE.Mesh(newCubeGeometry1, material);
+newCube11.castShadow = true;
+let newCube12 = new THREE.Mesh(newCubeGeometry1, material);
+newCube12.castShadow = true;
+let newCube13 = new THREE.Mesh(newCubeGeometry2, material);
+newCube13.castShadow = true;
+let newCube14 = new THREE.Mesh(newCubeGeometry1, material);
+newCube14.castShadow = true;
+let newCube15 = new THREE.Mesh(newCubeGeometry2, material);
+newCube15.castShadow = true;
+let newCube16 = new THREE.Mesh(newCubeGeometry2, material);
+newCube16.castShadow = true;
+
+
 let newSphere1 = new THREE.Mesh( newSphereGeometry, material); 
 newSphere1.castShadow = true;
 let newSphere2 = new THREE.Mesh( newSphereGeometry, material); 
@@ -230,6 +226,19 @@ newSphere5.castShadow = true;
 let newSphere6 = new THREE.Mesh( newSphereGeometry, material); 
 newSphere6.castShadow = true;
 
+let newSphere7 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere7.castShadow = true;
+let newSphere8 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere8.castShadow = true;
+let newSphere9 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere9.castShadow = true;
+let newSphere10 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere10.castShadow = true;
+let newSphere11 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere11.castShadow = true;
+let newSphere12 = new THREE.Mesh( newSphereGeometry, material); 
+newSphere12.castShadow = true;
+
 
 cube.add(newCube1);
 cube.add(newCube2);
@@ -240,12 +249,29 @@ cube.add(newCube6);
 cube.add(newCube7);
 cube.add(newCube8);
 
+cube.add(newCube9);
+cube.add(newCube10);
+cube.add(newCube11);
+cube.add(newCube12);
+cube.add(newCube13);
+cube.add(newCube14);
+cube.add(newCube15);
+cube.add(newCube16);
+
 cube.add(newSphere1);
 cube.add(newSphere2);
 cube.add(newSphere3);
 cube.add(newSphere4);
 cube.add(newSphere5);
 cube.add(newSphere6);
+
+cube.add(newSphere7);
+cube.add(newSphere8);
+cube.add(newSphere9);
+cube.add(newSphere10);
+cube.add(newSphere11);
+cube.add(newSphere12);
+
 
 
 // Setando as posições das texturas 
@@ -258,12 +284,28 @@ newCube6.position.set(25,5,6);
 newCube7.position.set(25,12,-3);
 newCube8.position.set(33,14.5,-1);
 
+newCube9.position.set(40,15,0);
+newCube10.position.set(45,15,5);
+newCube11.position.set(39,15,9);
+newCube12.position.set(45,16,12);
+newCube13.position.set(-25,14,10);
+newCube14.position.set(-30,15,6);
+newCube15.position.set(-20,15,2);
+newCube16.position.set(-33,15,2);
+
 newSphere1.position.set(-13,14.5,0);
 newSphere2.position.set(-9,14.5,7);
 newSphere3.position.set(14,4.5,10);
 newSphere4.position.set(-5.5,10,10);
 newSphere5.position.set(25,13,10);
 newSphere6.position.set(30,15,4);
+
+newSphere7.position.set(33,15,10);
+newSphere8.position.set(38,15,5);
+newSphere9.position.set(42,15,9);
+newSphere10.position.set(-25,15,5);
+newSphere11.position.set(-19,15,8);
+newSphere12.position.set(-30,15,10);
 
 render();
 

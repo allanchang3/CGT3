@@ -340,12 +340,51 @@ function fixPosition1(obj)
 function verificarObjetoCarregado(objeto, flag) {
    if (objeto !== null && objeto !== undefined && flag == 1) {
        cube.add(objeto);
+       var box = new THREE.Box3().setFromObject(objeto);
+
+       var boxMin = box.min;
+       var boxMax = box.max;
+       
+       var boxSize = boxMax.clone().sub(boxMin);
+       var boxGeometry = new THREE.BoxGeometry(boxSize.x/4, boxSize.y/4, boxSize.z/4);
+       
+       var boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+       var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+       
+       
+       objeto.add(boxMesh);
    }else{
       if(objeto !== null && objeto !== undefined && flag == 2){
          cube5.add(objeto);
+         var box = new THREE.Box3().setFromObject(objeto);
+
+         var boxMin = box.min;
+         var boxMax = box.max;
+         
+         var boxSize = boxMax.clone().sub(boxMin);
+         var boxGeometry = new THREE.BoxGeometry(boxSize.x/4, boxSize.y/4, boxSize.z/4);
+         
+         var boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+         var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+         
+         
+         objeto.add(boxMesh);
       }else{
          if(objeto !== null && objeto !== undefined && flag == 3){
             cube3.add(objeto);
+            var box = new THREE.Box3().setFromObject(objeto);
+
+            var boxMin = box.min;
+            var boxMax = box.max;
+            
+            var boxSize = boxMax.clone().sub(boxMin);
+            var boxGeometry = new THREE.BoxGeometry(boxSize.x/4, boxSize.y/4, boxSize.z/4);
+            
+            var boxMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+            var boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
+      
+            
+            objeto.add(boxMesh);
          }
       }
    }
@@ -391,6 +430,7 @@ newSphere9.position.set(52,15,9);
 newSphere10.position.set(-25,15,5);
 newSphere11.position.set(-19,15,8);
 newSphere12.position.set(-30,15,10);
+
 
 
 return cube;

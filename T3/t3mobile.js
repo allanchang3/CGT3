@@ -335,12 +335,16 @@ function onButtonDown(event) {
 	switch(event.target.id)
 	{
 		case "A":
-            shootBullet();
-         break;
-        case "B":
-            pause();
-            console.log("pause");
-        break;
+      shootBullet();
+    break;
+    case "B":
+        pause();
+        console.log("pause");
+    break;
+    case "C":
+      //IMPLEMENTAR FUNÇÃO SOM
+    break;
+        
 	}
 }
 
